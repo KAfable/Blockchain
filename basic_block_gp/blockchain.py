@@ -6,18 +6,17 @@ from uuid import uuid4
 from flask import Flask, jsonify, request
 
 
-class Blockchain(object):
+class Blockchain():
     def __init__(self):
         self.chain = []
         self.current_transactions = []
 
         # Create the genesis block
-        self.new_block(previous_hash=1, proof=100)
+        self.new_block(previous_hash='started at the bottom', proof=100)
 
     def new_block(self, proof, previous_hash=None):
         """
         Create a new Block in the Blockchain
-
         A block should have:
         * Index
         * Timestamp
@@ -39,7 +38,7 @@ class Blockchain(object):
         }
 
         # Reset the current list of transactions
-        current_transactions = []
+        self.current_transactions = []
         # Append the chain to the block
         self.chain.append(block)
         # Return the new block
@@ -48,7 +47,6 @@ class Blockchain(object):
     def hash(self, block):
         """
         Creates a SHA-256 hash of a Block
-
         :param block": <dict> Block
         "return": <str>
         """

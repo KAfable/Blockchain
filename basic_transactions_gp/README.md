@@ -1,4 +1,4 @@
-Create a method in the `Blockchain` class called `new_transaction` 
+Create a method in the `Blockchain` class called `new_transaction`
 that adds a new transaction to the list of transactions:
 
     :param sender: <str> Address of the Recipient
@@ -20,4 +20,3 @@ Create an endpoint at `/transactions/new` that accepts a json `POST`:
         * return a 400 error using `jsonify(response)` with a 'message'
     * upon success, return a 'message' indicating index of the block
       containing the transaction
-

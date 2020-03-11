@@ -21,3 +21,4 @@
 - makes it expensive to validate data at a distributed consensus
 - finding leading 0's is the proof work
 - a node can die if miners decided to stop mining at it
+- only real way to alter a previous chain is to spend as much computation as all of the other miners

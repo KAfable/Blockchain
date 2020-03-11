@@ -4,7 +4,7 @@ In the initial blockchain demonstration, we've created a small problem. The `min
 
 Furthermore, the amount of work needed to actually mine a block is a bit low. We need it to be harder to preserve the integrity of the chain.
 
-# Task List
+## Task List
 
 _Server_
 Modify the server we created to:

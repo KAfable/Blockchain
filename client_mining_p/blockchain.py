@@ -7,7 +7,7 @@ from uuid import uuid4
 
 
 class Block():
-    def __init__(self, index=1, proof, transactions, previous_hash):
+    def __init__(self, index, proof, transactions, previous_hash):
         self.timestamp = time.now()
         self.index = index
         self.proof = proof
@@ -26,7 +26,7 @@ class Blockchain():
         self.current_transactions = []
 
     def __gen_genesis__(self):
-        return new Block(proof=1337, transactions=self.current_transactions, previous_hash='Started from the bottom')
+        return Block(index=0, proof=1337, transactions=self.current_transactions, previous_hash='Started from the bottom')
 
     def __wipe_transactions__(self):
         self.current_transactions = []
@@ -77,5 +77,5 @@ def chain():
     pass
 
 
-if __name__ = '__main__':
+if __name__ == '__main__':
     app.run(host='localhost', port=5000)

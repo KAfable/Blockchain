@@ -1,7 +1,6 @@
 # Blockchain
 
 - blockchain solves the trust issue because it uses cryptography to make sure that the authentication
--
 
 ## Anatomy of a Blockchain
 

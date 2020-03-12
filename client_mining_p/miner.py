@@ -18,7 +18,7 @@ def gen_proof(block):
         proof += 1
     end = datetime.now()
     duration = end - start
-    print(f'Total Time(s) : {duration.total_seconds()}')
+    print(f'Proof found: {proof} - Total time(s) : {duration.total_seconds()}')
     return proof
 
 
@@ -61,7 +61,6 @@ if __name__ == '__main__':
 
         block = data['last_block']
         new_proof = gen_proof(block)
-        print(f'proof found: {new_proof}')
 
         # When found, POST it to the server {"proof": new_proof, "id": id}
         post_data = {"proof": new_proof, "id": id}
@@ -74,8 +73,7 @@ if __name__ == '__main__':
             print(r)
             break
 
-        print(data['message'])
         server_res = data['message']
         if server_res == 'New Block Forged':
             coins += 1
-        print(f'Total Coins: {coins}')
+        print(f'{server_res} - Total coins: {coins}')

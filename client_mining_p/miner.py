@@ -7,13 +7,17 @@ import json
 
 def proof_of_work(block):
     """
-    Simple Proof of Work Algorithm
-    Stringify the block and look for a proof.
+    Simple Proof of Work Algorithm Stringify the block and look for a proof.
     Loop through possibilities, checking each one against `valid_proof`
     in an effort to find a number that is a valid proof
     :return: A valid proof for the provided block
     """
-    pass
+    block_string = json.dumps(block, sort_keys=True).encode()
+    proof = 0
+    while valid_proof(block_string, proof) is False:
+        proof += 1
+
+    return proof
 
 
 def valid_proof(block_string, proof):
@@ -27,7 +31,10 @@ def valid_proof(block_string, proof):
     correct number of leading zeroes.
     :return: True if the resulting hash is a valid proof, False otherwise
     """
-    pass
+    guess = f"{block_string}{proof}".encode()
+    guess_hash = hashlib.sha256(guess).hexdigest()
+
+    return guess_hash[0:6] == '000000'
 
 
 if __name__ == '__main__':

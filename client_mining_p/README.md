@@ -12,12 +12,12 @@ Modify the server we created to:
 - ~~Remove the `proof_of_work` function from the server.~~
 - ~~Change `valid_proof` to require _6_ leading zeroes.~~
 - ~~Add an endpoint called `last_block` that returns the last block in the chain~~
-- Modify the `mine` endpoint to instead receive and validate or reject a new proof sent by a client.
-  - It should accept a POST
-  - Use `data = request.get_json()` to pull the data out of the POST
-    - Note that `request` and `requests` both exist in this project
-  - Check that 'proof', and 'id' are present
-    - return a 400 error using `jsonify(response)` with a 'message'
+- ~~Modify the `mine` endpoint to instead receive and validate or reject a new proof sent by a client.~~
+  - ~~It should accept a POST~~
+  - ~~Use `data = request.get_json()` to pull the data out of the POST~~
+    - ~~Note that `request` and `requests` both exist in this project~~
+  - ~~Check that 'proof', and 'id' are present~~
+    - ~~return a 400 error using `jsonify(response)` with a 'message'~~
 - Return a message indicating success or failure. Remember, a valid proof should fail for all senders except the first.
 
 _Client Mining_

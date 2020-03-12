@@ -109,18 +109,16 @@ node_identifier = str(uuid4()).replace('-', '')
 blockchain = Blockchain()
 
 
-@app.route('/mine', methods=['GET'])
+@app.route('/mine', methods=['POST'])
 def mine():
-    # Run the proof of work algorithm to get the next proof
-    proof = blockchain.proof_of_work(blockchain.last_block)
 
-    previous_hash = blockchain.hash(blockchain.last_block)
-    # Forge the new Block by adding it to the chain with the proof
-    block = blockchain.new_block(proof, previous_hash=previous_hash)
+    data = request.get_json()
+    print(f'this is the data {data}')
+    if data['proof'] is None or data['id'] is None:
+        response = 'your request sucks'
+        return jsonify(response), 400
 
-    response = {
-        'new_block': block
-    }
+    client_proof = data['proof']
 
     return jsonify(response), 200
 

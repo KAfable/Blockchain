@@ -12,7 +12,7 @@ from flask import Flask, jsonify, request
 # Block class index needs to be passed in, or defaults to genesis index, other ones only BlockChain has knowledge of
 
 
-class Block(JSONEncoder):
+class Block():
     def __init__(self, index, proof, transactions, previous_hash):
         self.timestamp = time()
         self.index = index
@@ -20,14 +20,19 @@ class Block(JSONEncoder):
         self.transactions = transactions
         self.previous_hash = previous_hash
 
-    def default(self):
-        return {
-            'timestamp': self.timestamp,
-            'index': self.index,
-            'proof': self.proof,
-            'transactions': self.transactions,
-            'previous_hash': self.previous_hash
-        }
+
+class CustomEncoder(JSONEncoder):
+    def default(self, obj):
+        if type(obj) == 'Block':
+            return {
+                'timestamp': self.timestamp,
+                'index': self.index,
+                'proof': self.proof,
+                'transactions': self.transactions,
+                'previous_hash': self.previous_hash
+            }
+        else:
+            super().default()
 
 
 # block chain class only needs:

@@ -37,6 +37,8 @@ class Blockchain():
             'amount': amount
         }
         self.current_transactions.append(transaction)
+        # return the index of the block this transaction will be on
+        return self.last_block['index'] + 1
 
     def hash(self, block):
         """Returns a SHA-256 hash string of a Block"""
@@ -46,10 +48,8 @@ class Blockchain():
         byte_string = string_block.encode()
         raw_hash = hashlib.sha256(byte_string)
 
-        # By itself, the sha256 function returns the hash in a raw string
-        # that will likely include escaped characters.
-        # This can be hard to read, but .hexdigest() converts the
-        # hash to a string of hexadecimal characters, which is
+        # SHA256 function returns the hash in a raw string with escaped characters
+        # .hexdigest() converts the hash to a string of hexadecimal characters, which is
         # easier to work with and understand
         hex_hash = raw_hash.hexdigest()
         return hex_hash
@@ -99,7 +99,7 @@ def mine():
         block = blockchain.new_block(client_proof, previous_hash=previous_hash)
         response = {'message': 'New Block Forged', 'new_block': block}
 
-        return jsonify(response), 200
+        return jsonify(response), 201
     else:
         response = {
             'message': 'Proof was invalid or late'
@@ -128,7 +128,6 @@ def get_last():
 
 @app.route('/transactions/new', methods=['POST'])
 def add_transaction():
-
     # data validation
     data = request.get_json()
     required = ['sender', 'recipient', 'amount']
@@ -138,8 +137,13 @@ def add_transaction():
             'message': 'Please include a sender, recipient, and amount in your transaction request'}
         return jsonify(response), 400
 
-    blockchain.new_transaction(
+    index = blockchain.new_transaction(
         sender=data['sender'], recipient=data['recipient'], amount=data['amount'])
+
+    response = {
+        'message': f'Transaction created, it will be recorded on Block {index}'
+    }
+    return jsonify(response), 201
 
 
 # Run the program on port 5000

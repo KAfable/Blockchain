@@ -6,10 +6,13 @@ verify_ssl = true
 [dev-packages]
 flake8 = "*"
 pylint = "*"
+autopep8 = "*"
+v = {editable = true,version = "*"}
 
 [packages]
 requests = ">=2.20.0"
 flask = ">=1.0.0"
+pylint = "*"
 
 [requires]
 python_version = "3"

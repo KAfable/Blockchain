@@ -15,65 +15,35 @@ class Blockchain():
         self.new_block(previous_hash='started at the bottom', proof=100)
 
     def new_block(self, proof, previous_hash=None):
-        """
-        Create a new Block in the Blockchain
-        A block should have:
-        * Index
-        * Timestamp
-        * List of current transactions
-        * The proof used to mine this block
-        * The hash of the previous block
-
-        :param proof: <int> The proof given by the Proof of Work algorithm
-        :param previous_hash: (Optional) <str> Hash of previous Block
-        :return: <dict> New Block
-        """
+        """ Creates a new block in the block chain and appends it. It should contain an index, timestamp
+        list of current transactions, proof used to mine this block, the hash of the previous block. """
 
         block = {
-            'index': len(self.chain) + 1,
+            'index': len(self.chain),
             'timestamp': time(),
             'transactions': self.current_transactions,
             'proof': proof,
             'previous_hash': previous_hash or self.hash(self.last_block)
         }
 
-        # Reset the current list of transactions
         self.current_transactions = []
-        # Append the chain to the block
         self.chain.append(block)
-        # Return the new block
         return block
 
     def hash(self, block):
-        """
-        Creates a SHA-256 hash of a Block
-        :param block": <dict> Block
-        "return": <str>
-        """
+        """Returns a SHA-256 hash string of a Block"""
 
-        # Use json.dumps to convert json into a string
-        # Use hashlib.sha256 to create a hash
-        # It requires a `bytes-like` object, which is what
-        # .encode() does.
-        # It converts the Python string into a byte string.
-        # We must make sure that the Dictionary is Ordered,
-        # or we'll have inconsistent hashes
-
-        # TODO: Create the block_string
         string_block = json.dumps(block, sort_keys=True)
-
-        # TODO: Hash this string using sha256
-        raw_hash = hashlib.sha256(string_block.encode())
+        # hashlib expects a byte string, versus python strings are still objects with metadata
+        byte_string = string_block.encode()
+        raw_hash = hashlib.sha256(byte_string)
 
         # By itself, the sha256 function returns the hash in a raw string
         # that will likely include escaped characters.
         # This can be hard to read, but .hexdigest() converts the
         # hash to a string of hexadecimal characters, which is
         # easier to work with and understand
-
         hex_hash = raw_hash.hexdigest()
-
-        # TODO: Return the hashed block string in hexadecimal format
         return hex_hash
 
     @property
@@ -82,21 +52,12 @@ class Blockchain():
 
     @staticmethod
     def valid_proof(block_string, proof):
-        """
-        Validates the Proof:  Does hash(block_string + proof) contain 3
-        leading zeroes?  Return true if the proof is valid
-        :param block_string: <string> The stringified block to use to
-        check in combination with `proof`
-        :param proof: <int?> The value that when combined with the
-        stringified previous block results in a hash that has the
-        correct number of leading zeroes.
-        :return: True if the resulting hash is a valid proof, False otherwise
-        """
+        """ A valid proof is a a randomly generated string (in this case integers), that return a hash with the correct amount of leading zeroes. Determines if the hash generated from the block string and proof is valid, thus proving the proof is valid."""
 
         guess = f'{block_string}{proof}'.encode()
         guess_hash = hashlib.sha256(guess).hexdigest()
 
-        return guess_hash[:3] == '000'
+        return guess_hash[:6] == '000000'
 
 
 # Instantiate our Node
@@ -112,7 +73,7 @@ blockchain = Blockchain()
 @app.route('/mine', methods=['POST'])
 def mine():
     data = request.get_json()
-    print(f'this is the data {data}')
+    print(f'Client Proof: {data}')
     # response = ''
     required = ['proof', 'id']
 
@@ -126,7 +87,7 @@ def mine():
     if blockchain.valid_proof(block_string, client_proof):
         previous_hash = blockchain.hash(blockchain.last_block)
         block = blockchain.new_block(client_proof, previous_hash=previous_hash)
-        response = {'new_block': block}
+        response = {'message': 'New Block Forged', 'new_block': block}
         return jsonify(response), 200
     else:
         response = {

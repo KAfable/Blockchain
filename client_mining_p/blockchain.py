@@ -96,7 +96,7 @@ class Blockchain():
         guess = f'{block_string}{proof}'.encode()
         guess_hash = hashlib.sha256(guess).hexdigest()
 
-        return guess_hash[:6] == '000000'
+        return guess_hash[:3] == '000'
 
 
 # Instantiate our Node
@@ -111,16 +111,29 @@ blockchain = Blockchain()
 
 @app.route('/mine', methods=['POST'])
 def mine():
-
     data = request.get_json()
     print(f'this is the data {data}')
-    if data['proof'] is None or data['id'] is None:
-        response = 'your request sucks'
+    # response = ''
+    required = ['proof', 'id']
+
+    if not all(k in data for k in required):
+        response = {'message': "missing values"}
         return jsonify(response), 400
 
     client_proof = data['proof']
+    block_string = json.dumps(blockchain.last_block, sort_keys=True).encode()
 
-    return jsonify(response), 200
+    if blockchain.valid_proof(block_string, client_proof):
+        previous_hash = blockchain.hash(blockchain.last_block)
+        block = blockchain.new_block(client_proof, previous_hash=previous_hash)
+        response = {'new_block': block}
+        return jsonify(response), 200
+    else:
+        response = {
+            'message': 'Proof was invalid or late'
+        }
+
+    return jsonify(response), 403
 
 
 @app.route('/chain', methods=['GET'])
@@ -134,7 +147,11 @@ def full_chain():
 
 @app.route('/last_block', methods=['GET'])
 def get_last():
-    return blockchain.last_block
+    # remember to return a json
+    response = {
+        'last_block': blockchain.last_block
+    }
+    return jsonify(response), 200
 
 
 # Run the program on port 5000

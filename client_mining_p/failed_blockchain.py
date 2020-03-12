@@ -105,7 +105,7 @@ def mine():
     blockchain.forge(new_block)
 
     response = {
-        'block': new_block.convert_to_dict()
+        'block': new_block
     }
 
     return jsonify(response), 200

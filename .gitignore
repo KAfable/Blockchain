@@ -109,7 +109,7 @@ my_id.txt
 #vscode local settings
 .vscode/
 
-/node_modules
+/basic_wallet_p/bitwallet/node_modules
 /.pnp
 .pnp.js
 
